@@ -13,8 +13,15 @@
 
    （テンプレートは React でなくてもよい。）
 
-3. 依存関係インストール: `npm install`
+   **既にクローン済みのリポジトリ直下に置く場合**は、カレントディレクトリを指定する例:
+
+   ```bash
+   npm create vite@latest . -- --template react-ts
+   ```
+
+3. 依存関係インストール: `npm install`（**pnpm / yarn** を使う場合は `pnpm install` / `yarn` に読み替え）。
 4. 開発サーバ: `npm run dev` → ブラウザで `http://localhost:5173`（既定）
+5. 本番ビルドのローカル確認: `npm run build` → `npm run preview` → 既定では `http://localhost:4173`（`dist` の内容を配信）
 
 ## 2. 実装の順序（推奨）
 
@@ -26,6 +33,7 @@
 ## 3. 品質・公開前チェック
 
 - `npm run build` がエラーなく通る。
+- **テスト**: Vitest を導入している場合は `npm run test`（または `npx vitest run`）が通る。
 - 主要ブラウザで **鍵盤・混色・表示** を確認（実機のスマホ推奨）。
 - アクセシビリティ: コントラスト、フォーカス可能な操作（可能なら）。
 
@@ -35,15 +43,29 @@
 
 ## 5. デプロイ（例: GitHub Pages）
 
-### 5.1 リポジトリを `username.github.io` 以外に置く場合
+公式の静的デプロイ手順の一覧: [Vite — Deploying a Static Site（GitHub Pages 節）](https://vitejs.dev/guide/static-deploy.html#github-pages)
 
-- サブパス公開になるため、Vite の `base: '/リポジトリ名/'` を設定。
-- GitHub Actions で `main` マージ時に `dist` を `gh-pages` ブランチへデプロイするワークフローをよく使う。
+### 5.1 公開 URL の形と `base`
 
-### 5.2 Cloudflare Pages / Netlify
+| サイトの種類 | 例 | Vite の `base` |
+|--------------|-----|----------------|
+| **ユーザ／組織サイト**（`username.github.io` リポジトリ） | `https://username.github.io/` | `base: '/'` |
+| **プロジェクトサイト**（`username.github.io/リポジトリ名/`） | `https://username.github.io/Note2Color/` | `base: '/リポジトリ名/'`（**先頭・末尾に `/` を付ける**） |
+
+サブパス公開では **`base` を間違えると CSS/JS が 404** になるため、リポジトリ名が決まったら `vite.config` と一緒に固定する。
+
+### 5.2 デプロイのしかた（よくあるパターン）
+
+- **GitHub Actions**: `main` へのプッシュ時に `npm ci` → `npm run build` → 生成物を **GitHub Pages** に公開（`actions/upload-pages-artifact` と `actions/deploy-pages` の組み合わせが一般的）。リポジトリの **Settings → Pages** でソースを **GitHub Actions** にする。
+- **別ブランチ方式**: ビルド結果だけを **`gh-pages` ブランチ** にプッシュするワークフロー（例: `peaceiris/actions-gh-pages`）もよく使われる。**Settings → Pages** で公開ブランチを `gh-pages` / `root` に指定。
+
+いずれも **ビルドはリポジトリのルートで実行**し、**公開するのは `dist/` の中身**（設定により `dist` 自体ではなくその子をルートとして載せる）である点は同じ。
+
+### 5.3 Cloudflare Pages / Netlify
 
 - リポジトリ連携後、**ビルドコマンド** `npm run build`、**出力ディレクトリ** `dist` を指定。
 - 環境変数は本プロジェクトでは原則不要（API キーなし前提）。
+- サブパスではなくルートに載せるホスティングが多いが、**カスタムドメインやサブパス**を使う場合は各サービスの「ベースパス」設定と Vite の `base` を揃える。
 
 ## 6. カスタムドメイン（任意）
 
@@ -56,4 +78,4 @@
 
 ## 8. ドキュメントとして残すもの（公開後）
 
-- README に **公開 URL**、**ローカル起動方法**、**仕様の参照先**（本 `Note2Color_interpreter` ドキュメントへのリンク）。
+- README に **公開 URL**、**ローカル起動方法**、**仕様の参照先**（本リポジトリの `doc/` 配下の仕様書へのリンク）。
