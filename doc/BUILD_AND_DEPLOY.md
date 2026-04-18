@@ -2,6 +2,27 @@
 
 前提: [TECH_STACK.md](./TECH_STACK.md) の **Vite + TypeScript + 任意フレームワーク**。パッケージマネージャは本ドキュメントでは **pnpm** を前提とする（未導入の場合は [pnpm のインストール](https://pnpm.io/installation)を参照。`corepack enable` や `npm install -g pnpm` でも可）。
 
+## このリポジトリ（Note2Color）でのローカル開発
+
+リポジトリをクローン済みで、ルートで次を実行します。
+
+```bash
+pnpm install
+pnpm dev
+```
+
+ブラウザでは **`http://localhost:5173/Note2Color/`** を開いてください（`vite.config.ts` の `base` が `/Note2Color/` のため）。
+
+```bash
+pnpm run build    # 本番ビルド（型チェック + Vite）
+pnpm preview      # dist のローカル確認（既定 http://localhost:4173/Note2Color/）
+pnpm test         # Vitest
+```
+
+**GitHub Pages での公開**は、画面操作の詳細を [GITHUB_PAGES.md](./GITHUB_PAGES.md) にまとめています。リポジトリには `.github/workflows/deploy-pages.yml` があります。
+
+---
+
 ## 1. ローカル開発環境
 
 1. **Node.js LTS** をインストール（例: 20.x 系。プロジェクトで `.nvmrc` や `engines` を置くとよい）。
@@ -43,6 +64,8 @@
 
 ## 5. デプロイ（例: GitHub Pages）
 
+**Note2Color を初めて GitHub Pages に載せるとき**は、[GITHUB_PAGES.md](./GITHUB_PAGES.md) のステップに従うと、Settings の切り替えから公開 URL まで一通り追えます。
+
 公式の静的デプロイ手順の一覧: [Vite — Deploying a Static Site（GitHub Pages 節）](https://vitejs.dev/guide/static-deploy.html#github-pages)
 
 ### 5.1 公開 URL の形と `base`
@@ -78,4 +101,5 @@
 
 ## 8. ドキュメントとして残すもの（公開後）
 
-- README に **公開 URL**、**ローカル起動方法**、**仕様の参照先**（本リポジトリの `doc/` 配下の仕様書へのリンク）。
+- ルートの **README**: エンドユーザー向けの概要・**取り扱い説明書**（[USER_GUIDE.md](./USER_GUIDE.md)）・公開 URL の目安・仕様へのリンク。
+- **開発者向け**のコマンドやビルド手順は本ファイル（BUILD_AND_DEPLOY）および [GITHUB_PAGES.md](./GITHUB_PAGES.md) に集約する。

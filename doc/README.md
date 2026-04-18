@@ -11,10 +11,12 @@
 
 | 順 | ファイル | 内容 |
 |---|----------|------|
+| — | [USER_GUIDE.md](./USER_GUIDE.md) | **エンドユーザー向け**取り扱い説明（操作・画面の意味） |
+| — | [GITHUB_PAGES.md](./GITHUB_PAGES.md) | **GitHub Pages 公開**のステップバイステップ |
 | 1 | [REQUIREMENTS.md](./REQUIREMENTS.md) | アプリ概要、機能要件・非機能要件、UI 要件 |
 | 2 | [SPEC_MAPPING_AND_MIXING.md](./SPEC_MAPPING_AND_MIXING.md) | 推奨マッピング、RGB/HSV、加法・減法混色の数式案 |
 | 3 | [TECH_STACK.md](./TECH_STACK.md) | 推奨技術スタックと採用理由 |
-| 4 | [BUILD_AND_DEPLOY.md](./BUILD_AND_DEPLOY.md) | ローカル開発から本番公開までの流れ |
+| 4 | [BUILD_AND_DEPLOY.md](./BUILD_AND_DEPLOY.md) | ローカル開発・ビルド・デプロイ（開発者向け） |
 | 5 | [IMPLEMENTATION_CHECKLIST.md](./IMPLEMENTATION_CHECKLIST.md) | 実装タスク分解、未決事項、コーディング開始前チェックリスト |
 
 ## クイックサマリ（実装の核）

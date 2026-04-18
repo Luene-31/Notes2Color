@@ -1,33 +1,16 @@
 # Note2Color
 
-音階（白鍵・黒鍵を含む 12 平均律）を色相空間に写し、単音・和音を色（表示）に変換する Web アプリです（プロトタイプ）。
+12 平均律の音（単音・和音）を色相に対応させ、選んだ音を混色して **1 色** として画面に表示するブラウザ向け Web アプリです。音声は出しません。
 
-## 仕様
+## 使い方
 
-`doc/` 配下の [SPEC_MAPPING_AND_MIXING.md](./doc/SPEC_MAPPING_AND_MIXING.md) を正とします。
+操作手順・画面の説明・注意事項は **[取り扱い説明書（doc/USER_GUIDE.md）](./doc/USER_GUIDE.md)** を参照してください。
 
-## 必要環境
+## ブラウザで利用する
 
-- Node.js（LTS 推奨）
-- [pnpm](https://pnpm.io/)（`npm install -g pnpm` など）
+Note2Color は **Web アプリ**です。案内されたページのアドレスを **ブラウザで開き**、画面の指示に従って操作してください。別途アプリのインストールは不要で、パソコンやスマートフォンの一般的なブラウザから利用できます。
 
-## ローカル開発
+## 仕様・技術ドキュメント（開発者向け）
 
-```bash
-pnpm install
-pnpm dev
-```
-
-ブラウザで **`http://localhost:5173/Note2Color/`** を開いてください（`vite.config.ts` の `base` がリポジトリ名に合わせてあります）。
-
-## ビルド・プレビュー・テスト
-
-```bash
-pnpm run build
-pnpm preview
-pnpm test
-```
-
-## 公開（GitHub Pages）
-
-[doc/BUILD_AND_DEPLOY.md](./doc/BUILD_AND_DEPLOY.md) を参照してください。
+色と音の対応や混色の定義は **[doc/SPEC_MAPPING_AND_MIXING.md](./doc/SPEC_MAPPING_AND_MIXING.md)** を正とします。  
+その他の設計メモは **[doc/README.md](./doc/README.md)** の一覧から参照できます。

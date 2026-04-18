@@ -1,10 +1,10 @@
 # 実装チェックリスト・生成 AI への引き継ぎ
 
-別チャットの生成 AI に **このフォルダ一式** を渡し、「[README.md](./README.md) の順に読んで実装して」と指示できることを想定する。
+別チャットの生成 AI に **このフォルダ一式** を渡し、「[README.md](./README.md)（本 `doc` フォルダ内の目次）の一覧に沿って読んで実装して」と指示できることを想定する。
 
 ## 1. 必読ドキュメント（順序固定推奨）
 
-1. [README.md](./README.md)
+1. [README.md](./README.md)（`doc` 内のドキュメント一覧）
 2. [REQUIREMENTS.md](./REQUIREMENTS.md)
 3. [SPEC_MAPPING_AND_MIXING.md](./SPEC_MAPPING_AND_MIXING.md) — **数式・定数の正**
 4. [TECH_STACK.md](./TECH_STACK.md)
@@ -19,7 +19,7 @@
 - [ ] **UI**: 鍵盤（トグル選択）、カラーボックス、加法/減法トグル、RGB/HEX/H 表示
 - [ ] **テスト**: 単音の代表値、和音の可換性、混色モード切替
 - [ ] **レスポンシブ**: スマホ幅でのレイアウト
-- [ ] **README（実装リポ）**: 起動方法、デプロイ先 URL
+- [ ] **ドキュメント（実装リポ）**: ルート README はユーザー向け。起動・ビルドは [BUILD_AND_DEPLOY.md](./BUILD_AND_DEPLOY.md)、公開手順は [GITHUB_PAGES.md](./GITHUB_PAGES.md)
 
 ## 3. コーディング開始前に「決めておくとよい」未決事項
 
@@ -36,7 +36,7 @@
 ## 4. 生成 AI に依頼する際のプロンプト例（コピペ用）
 
 ```
-次のディレクトリに仕様書がある。README の順に読み、要件を満たす Web アプリを実装してください。
+次のディレクトリに仕様書がある。doc/README.md の一覧順に読み、要件を満たす Web アプリを実装してください。
 仕様の数式は SPEC_MAPPING_AND_MIXING.md を正とする。
 技術スタックは TECH_STACK.md に従い、Vite + TypeScript を使う。
 ドメイン層（色変換・混色）を UI から分離し、Vitest でテストを書く。
