@@ -5,11 +5,11 @@ import { midiToLabel } from '../domain/midi'
 
 const WHITE_MIDIS = whiteMidisInRange(MIDI_MIN, MIDI_MAX)
 const BLACK_LAYOUT = blackKeyLayoutInRange(MIDI_MIN, MIDI_MAX, WHITE_MIDIS)
+const WHITE_KEY_COUNT = WHITE_MIDIS.length
 
-/** 白鍵 1 個分の幅(px)。黒鍵は境界に中揃え */
-const KW = 48
-const BW = 28
-const BH = 88
+/** 黒鍵の幅・高さ（px）。白鍵幅はコンテナに合わせて可変 */
+const BW = 22
+const BH = 76
 
 const props = defineProps<{
   selected: ReadonlySet<number>
@@ -27,33 +27,35 @@ function onToggle(m: number) {
   emit('toggle', m)
 }
 
-function blackLeftPx(boundaryIndex: number): number {
-  return boundaryIndex * KW - BW / 2
+/** 白鍵 i 列の左端位置（%）に揃えた黒鍵の left（親幅に対する % ベース） */
+function blackLeftStyle(boundaryIndex: number): Record<string, string> {
+  const pct = (boundaryIndex / WHITE_KEY_COUNT) * 100
+  return {
+    left: `calc(${pct}% - ${BW / 2}px)`,
+    width: `${BW}px`,
+    height: `${BH}px`,
+  }
 }
 </script>
 
 <template>
-  <div class="w-full overflow-x-auto pb-2">
+  <div class="w-full pb-2">
     <p class="mb-2 text-sm text-neutral-600">
       表示範囲: MIDI {{ MIDI_MIN }}（{{ midiToLabel(MIDI_MIN) }}）〜 {{ MIDI_MAX }}（{{
         midiToLabel(MIDI_MAX)
       }}）
     </p>
-    <div
-      class="relative mx-auto flex select-none"
-      :style="{ width: `${WHITE_MIDIS.length * KW}px`, minWidth: `${WHITE_MIDIS.length * KW}px` }"
-    >
+    <div class="relative mx-auto flex w-full min-w-0 select-none">
       <button
         v-for="m in WHITE_MIDIS"
         :key="m"
         type="button"
-        class="relative box-border flex min-h-[140px] min-w-[44px] flex-1 flex-col items-center justify-end border border-neutral-500 bg-white pb-2 text-xs font-medium text-neutral-800 shadow-sm transition hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        class="key-white relative box-border flex min-h-[132px] min-w-[22px] flex-1 basis-0 flex-col items-center justify-end border border-neutral-500 pb-2 text-xs font-medium text-neutral-800 shadow-sm transition hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         :class="
           isSelected(m)
-            ? 'z-[5] bg-amber-100 ring-2 ring-amber-500 ring-offset-1'
-            : 'z-0'
+            ? 'z-[5] key-white--selected'
+            : 'z-0 bg-white'
         "
-        :style="{ width: `${KW}px`, flex: `0 0 ${KW}px` }"
         :aria-pressed="isSelected(m)"
         :aria-label="`${midiToLabel(m)}。${isSelected(m) ? '選択中' : '未選択'}`"
         @click="onToggle(m)"
@@ -65,17 +67,13 @@ function blackLeftPx(boundaryIndex: number): number {
         v-for="b in BLACK_LAYOUT"
         :key="b.midi"
         type="button"
-        class="absolute top-0 box-border rounded-b-md border border-neutral-800 bg-neutral-900 text-[10px] text-neutral-100 shadow-md transition hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
+        class="absolute top-0 box-border rounded-b-md border border-neutral-800 text-[10px] text-neutral-100 shadow-md transition hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
         :class="
           isSelected(b.midi)
-            ? 'z-20 ring-2 ring-amber-400 ring-offset-1'
-            : 'z-10'
+            ? 'z-20 key-black--selected'
+            : 'z-10 bg-neutral-900'
         "
-        :style="{
-          left: `${blackLeftPx(b.boundaryIndex)}px`,
-          width: `${BW}px`,
-          height: `${BH}px`,
-        }"
+        :style="blackLeftStyle(b.boundaryIndex)"
         :aria-pressed="isSelected(b.midi)"
         :aria-label="`${midiToLabel(b.midi)}。${isSelected(b.midi) ? '選択中' : '未選択'}`"
         @click.stop="onToggle(b.midi)"
@@ -85,3 +83,30 @@ function blackLeftPx(boundaryIndex: number): number {
     </div>
   </div>
 </template>
+
+<style scoped>
+.key-white--selected {
+  /* 網掛け + 下地（帯と隙間で交互） */
+  background-color: #fff;
+  background-image: repeating-linear-gradient(
+    -36deg,
+    rgba(245, 158, 11, 0.4) 0 5px,
+    rgba(255, 255, 255, 0.72) 5px 10px
+  );
+  box-shadow:
+    inset 0 0 0 2px rgba(217, 119, 6, 0.45),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.key-black--selected {
+  background-color: rgb(23 23 23);
+  background-image: repeating-linear-gradient(
+    -36deg,
+    rgba(251, 191, 36, 0.48) 0 4px,
+    rgba(30, 30, 30, 0.88) 4px 8px
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(251, 191, 36, 0.45),
+    0 2px 4px rgba(0, 0, 0, 0.35);
+}
+</style>

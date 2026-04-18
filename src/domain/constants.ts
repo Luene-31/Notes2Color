@@ -1,5 +1,5 @@
-/** 鍵盤: G3（55）〜 B5（83）、両端含む */
-export const MIDI_MIN = 55
+/** 鍵盤: A3（57）〜 B5（83）、両端含む */
+export const MIDI_MIN = 57
 export const MIDI_MAX = 83
 
 /** 固定 HSV（オクターブ補正なし） */

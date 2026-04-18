@@ -91,34 +91,10 @@ function isChordActive(midis: readonly number[]): boolean {
       </p>
     </header>
 
-    <main class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6">
+    <main class="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6">
       <section class="rounded-lg bg-white p-4 shadow">
         <h2 class="mb-3 text-sm font-semibold text-neutral-700">表示色</h2>
         <ColorPanel :rgb="resultRgb" />
-      </section>
-
-      <section class="rounded-lg bg-white p-4 shadow">
-        <h2 class="mb-3 text-sm font-semibold text-neutral-700">混色モード</h2>
-        <div class="flex flex-wrap items-center gap-3">
-          <label class="inline-flex cursor-pointer items-center gap-2 text-sm">
-            <input
-              v-model="mixMode"
-              type="radio"
-              value="additive"
-              class="h-4 w-4 accent-neutral-900"
-            />
-            加法混色（RGB・正規化付き線形和）
-          </label>
-          <label class="inline-flex cursor-pointer items-center gap-2 text-sm">
-            <input
-              v-model="mixMode"
-              type="radio"
-              value="subtractive"
-              class="h-4 w-4 accent-neutral-900"
-            />
-            減法混色（CMY・乗算型）
-          </label>
-        </div>
       </section>
 
       <section class="rounded-lg bg-white p-4 shadow">
@@ -133,6 +109,9 @@ function isChordActive(midis: readonly number[]): boolean {
           </button>
         </div>
         <div class="mb-4">
+          <PianoKeyboard :selected="selectedSet" @toggle="toggleMidi" />
+        </div>
+        <div class="mb-4 border-t border-neutral-200 pt-4">
           <p class="mb-2 text-sm text-neutral-600">
             ダイアトニック（C 長調・三和音）: タップで和音を入力、もう一度タップで解除
           </p>
@@ -159,23 +138,23 @@ function isChordActive(midis: readonly number[]): boolean {
           <p class="mb-2 text-sm text-neutral-600">
             ルート（C4〜B4）× コード種類: 組み合わせを選び、「表示」で鍵盤に反映、「クリア」で選択解除
           </p>
-          <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-            <label class="flex min-w-[8rem] flex-col gap-1 text-sm text-neutral-700">
+          <div class="flex flex-row flex-wrap items-end gap-3">
+            <label class="flex w-[min(100%,5.5rem)] shrink-0 flex-col gap-1 text-sm text-neutral-700">
               <span class="font-medium">ルート音</span>
               <select
                 v-model.number="chordBuilderRootPc"
-                class="min-h-[44px] rounded-md border border-neutral-400 bg-white px-2 py-2 text-sm text-neutral-900 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                class="min-h-[44px] w-full rounded-md border border-neutral-400 bg-white px-2 py-2 text-sm text-neutral-900 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               >
                 <option v-for="o in PITCH_CLASS_OPTIONS" :key="o.value" :value="o.value">
-                  {{ o.label }}（オクターブ 4）
+                  {{ o.label }}
                 </option>
               </select>
             </label>
-            <label class="flex min-w-[10rem] flex-1 flex-col gap-1 text-sm text-neutral-700">
+            <label class="flex w-[min(100%,7rem)] shrink-0 flex-col gap-1 text-sm text-neutral-700">
               <span class="font-medium">コード種類</span>
               <select
                 v-model="chordBuilderType"
-                class="min-h-[44px] rounded-md border border-neutral-400 bg-white px-2 py-2 text-sm text-neutral-900 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                class="min-h-[44px] w-full rounded-md border border-neutral-400 bg-white px-2 py-2 text-sm text-neutral-900 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               >
                 <option v-for="t in CHORD_TYPE_OPTIONS" :key="t.id" :value="t.id">
                   {{ t.label }}
@@ -203,7 +182,30 @@ function isChordActive(midis: readonly number[]): boolean {
             </div>
           </div>
         </div>
-        <PianoKeyboard :selected="selectedSet" @toggle="toggleMidi" />
+      </section>
+
+      <section class="rounded-lg bg-white p-4 shadow">
+        <h2 class="mb-3 text-sm font-semibold text-neutral-700">混色モード</h2>
+        <div class="flex flex-wrap items-center gap-3">
+          <label class="inline-flex cursor-pointer items-center gap-2 text-sm">
+            <input
+              v-model="mixMode"
+              type="radio"
+              value="additive"
+              class="h-4 w-4 accent-neutral-900"
+            />
+            加法混色（RGB・正規化付き線形和）
+          </label>
+          <label class="inline-flex cursor-pointer items-center gap-2 text-sm">
+            <input
+              v-model="mixMode"
+              type="radio"
+              value="subtractive"
+              class="h-4 w-4 accent-neutral-900"
+            />
+            減法混色（CMY・乗算型）
+          </label>
+        </div>
       </section>
     </main>
 
