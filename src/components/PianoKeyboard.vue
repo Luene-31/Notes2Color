@@ -47,11 +47,11 @@ function blackLeftPx(boundaryIndex: number): number {
         v-for="m in WHITE_MIDIS"
         :key="m"
         type="button"
-        class="relative z-0 box-border flex min-h-[140px] min-w-[44px] flex-1 flex-col items-center justify-end border border-neutral-500 bg-white pb-2 text-xs font-medium text-neutral-800 shadow-sm transition hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        class="relative box-border flex min-h-[140px] min-w-[44px] flex-1 flex-col items-center justify-end border border-neutral-500 bg-white pb-2 text-xs font-medium text-neutral-800 shadow-sm transition hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         :class="
           isSelected(m)
-            ? 'bg-amber-100 ring-2 ring-amber-500 ring-offset-1'
-            : ''
+            ? 'z-[5] bg-amber-100 ring-2 ring-amber-500 ring-offset-1'
+            : 'z-0'
         "
         :style="{ width: `${KW}px`, flex: `0 0 ${KW}px` }"
         :aria-pressed="isSelected(m)"
@@ -65,11 +65,11 @@ function blackLeftPx(boundaryIndex: number): number {
         v-for="b in BLACK_LAYOUT"
         :key="b.midi"
         type="button"
-        class="absolute top-0 z-10 box-border rounded-b-md border border-neutral-800 bg-neutral-900 text-[10px] text-neutral-100 shadow-md transition hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
+        class="absolute top-0 box-border rounded-b-md border border-neutral-800 bg-neutral-900 text-[10px] text-neutral-100 shadow-md transition hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
         :class="
           isSelected(b.midi)
-            ? 'ring-2 ring-amber-400 ring-offset-1'
-            : ''
+            ? 'z-20 ring-2 ring-amber-400 ring-offset-1'
+            : 'z-10'
         "
         :style="{
           left: `${blackLeftPx(b.boundaryIndex)}px`,
