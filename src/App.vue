@@ -2,12 +2,52 @@
 import { computed, ref } from 'vue'
 import ColorPanel from './components/ColorPanel.vue'
 import PianoKeyboard from './components/PianoKeyboard.vue'
+import {
+  CHORD_TYPE_OPTIONS,
+  chordMidisForShortcutRoot,
+  chordSymbolLabel,
+  shortcutRootMidiFromPitchClass,
+  type ChordTypeId,
+} from './domain/chordVoicing'
 import { DIATONIC_TRIADS_C_MAJOR, sameMidiSelection } from './domain/diatonicChords'
 import { mixFromMidiSet } from './domain/mixing'
+import { noteNameForPitchClass } from './domain/midi'
 import type { MixMode } from './domain/types'
 
 const selectedMidis = ref<number[]>([])
 const mixMode = ref<MixMode>('additive')
+
+/** ルートは C4〜B4（pitch class 0〜11）× コード種類（ショートカット用） */
+const chordBuilderRootPc = ref(0)
+const chordBuilderType = ref<ChordTypeId>('maj')
+
+const PITCH_CLASS_OPTIONS = Array.from({ length: 12 }, (_, pc) => ({
+  value: pc,
+  label: noteNameForPitchClass(pc),
+}))
+
+const chordBuilderMidis = computed(() =>
+  chordMidisForShortcutRoot(
+    shortcutRootMidiFromPitchClass(chordBuilderRootPc.value),
+    chordBuilderType.value,
+  ),
+)
+
+const chordBuilderSymbol = computed(() =>
+  chordSymbolLabel(chordBuilderRootPc.value, chordBuilderType.value),
+)
+
+function showChordFromBuilder() {
+  selectedMidis.value = [...chordBuilderMidis.value]
+}
+
+function clearChordBuilderSelection() {
+  selectedMidis.value = []
+}
+
+function isChordBuilderSelectionShown(): boolean {
+  return sameMidiSelection(selectedMidis.value, chordBuilderMidis.value)
+}
 
 const selectedSet = computed(() => new Set(selectedMidis.value))
 
@@ -113,6 +153,54 @@ function isChordActive(midis: readonly number[]): boolean {
             >
               {{ ch.label }}
             </button>
+          </div>
+        </div>
+        <div class="mb-4 border-t border-neutral-200 pt-4">
+          <p class="mb-2 text-sm text-neutral-600">
+            ルート（C4〜B4）× コード種類: 組み合わせを選び、「表示」で鍵盤に反映、「クリア」で選択解除
+          </p>
+          <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+            <label class="flex min-w-[8rem] flex-col gap-1 text-sm text-neutral-700">
+              <span class="font-medium">ルート音</span>
+              <select
+                v-model.number="chordBuilderRootPc"
+                class="min-h-[44px] rounded-md border border-neutral-400 bg-white px-2 py-2 text-sm text-neutral-900 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              >
+                <option v-for="o in PITCH_CLASS_OPTIONS" :key="o.value" :value="o.value">
+                  {{ o.label }}（オクターブ 4）
+                </option>
+              </select>
+            </label>
+            <label class="flex min-w-[10rem] flex-1 flex-col gap-1 text-sm text-neutral-700">
+              <span class="font-medium">コード種類</span>
+              <select
+                v-model="chordBuilderType"
+                class="min-h-[44px] rounded-md border border-neutral-400 bg-white px-2 py-2 text-sm text-neutral-900 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              >
+                <option v-for="t in CHORD_TYPE_OPTIONS" :key="t.id" :value="t.id">
+                  {{ t.label }}
+                </option>
+              </select>
+            </label>
+            <div class="flex flex-wrap gap-2">
+              <button
+                type="button"
+                class="min-h-[44px] rounded-md border border-blue-600 bg-blue-600 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                :aria-pressed="isChordBuilderSelectionShown()"
+                :aria-label="`${chordBuilderSymbol} を鍵盤に表示`"
+                @click="showChordFromBuilder"
+              >
+                表示（{{ chordBuilderSymbol }}）
+              </button>
+              <button
+                type="button"
+                class="min-h-[44px] rounded-md border border-neutral-400 bg-neutral-50 px-4 text-sm font-medium text-neutral-800 shadow-sm hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                aria-label="鍵盤の選択をすべて解除"
+                @click="clearChordBuilderSelection"
+              >
+                クリア
+              </button>
+            </div>
           </div>
         </div>
         <PianoKeyboard :selected="selectedSet" @toggle="toggleMidi" />

@@ -3,17 +3,19 @@ import { MIDI_MAX, MIDI_MIN } from './constants'
 import { blackKeyLayoutInRange, whiteMidisInRange } from './keyboardLayout'
 
 describe('keyboardLayout', () => {
-  it('C4〜F#5 の白鍵は 11 個', () => {
+  it('G3〜B5 の白鍵は 17 個', () => {
     const w = whiteMidisInRange(MIDI_MIN, MIDI_MAX)
-    expect(w).toEqual([60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77])
+    expect(w).toEqual([
+      55, 57, 59, 60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83,
+    ])
   })
 
-  it('黒鍵は 8 個・F#5 は最右境界', () => {
+  it('黒鍵は 12 個・最右の黒鍵は A#5（最右白は B5 の左隣）', () => {
     const w = whiteMidisInRange(MIDI_MIN, MIDI_MAX)
     const b = blackKeyLayoutInRange(MIDI_MIN, MIDI_MAX, w)
-    expect(b).toHaveLength(8)
-    const fSharp5 = b.find((x) => x.midi === 78)
-    expect(fSharp5).toEqual({ midi: 78, boundaryIndex: w.length })
+    expect(b).toHaveLength(12)
+    const aSharp5 = b.find((x) => x.midi === 82)
+    expect(aSharp5).toEqual({ midi: 82, boundaryIndex: w.length - 1 })
   })
 
   it('全構成音が鍵盤範囲内', () => {
