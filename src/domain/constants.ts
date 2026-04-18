@@ -1,6 +1,6 @@
-/** 鍵盤: C4（60）〜 C5（72）、両端含む 13 鍵 */
+/** 鍵盤: C4（60）〜 F#5（78）、両端含む */
 export const MIDI_MIN = 60
-export const MIDI_MAX = 72
+export const MIDI_MAX = 78
 
 /** 固定 HSV（オクターブ補正なし） */
 export const FIXED_S = 0.9

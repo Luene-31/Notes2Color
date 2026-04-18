@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { MIDI_MAX, MIDI_MIN } from '../domain/constants'
+import { blackKeyLayoutInRange, whiteMidisInRange } from '../domain/keyboardLayout'
 import { midiToLabel } from '../domain/midi'
 
-const WHITE_MIDIS = [60, 62, 64, 65, 67, 69, 71, 72] as const
-const BLACK_LAYOUT: { midi: number; boundaryIndex: number }[] = [
-  { midi: 61, boundaryIndex: 1 },
-  { midi: 63, boundaryIndex: 2 },
-  { midi: 66, boundaryIndex: 4 },
-  { midi: 68, boundaryIndex: 5 },
-  { midi: 70, boundaryIndex: 6 },
-]
+const WHITE_MIDIS = whiteMidisInRange(MIDI_MIN, MIDI_MAX)
+const BLACK_LAYOUT = blackKeyLayoutInRange(MIDI_MIN, MIDI_MAX, WHITE_MIDIS)
 
 /** 白鍵 1 個分の幅(px)。黒鍵は境界に中揃え */
 const KW = 48

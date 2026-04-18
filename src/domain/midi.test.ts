@@ -13,4 +13,9 @@ describe('midi', () => {
     expect(octaveNumber(72)).toBe(5)
     expect(pitchClass(72)).toBe(0)
   })
+
+  it('F#5 は MIDI 78', () => {
+    expect(midiToLabel(78)).toBe('F#5')
+    expect(octaveNumber(78)).toBe(5)
+  })
 })

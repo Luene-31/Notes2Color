@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import ColorPanel from './components/ColorPanel.vue'
 import PianoKeyboard from './components/PianoKeyboard.vue'
+import { DIATONIC_TRIADS_C_MAJOR, sameMidiSelection } from './domain/diatonicChords'
 import { mixFromMidiSet } from './domain/mixing'
 import type { MixMode } from './domain/types'
 
@@ -21,6 +22,19 @@ function toggleMidi(midi: number) {
 
 function clearAll() {
   selectedMidis.value = []
+}
+
+/** 同じ和音が既に選ばれていれば解除、そうでなければその和音だけを選択 */
+function toggleDiatonicChord(midis: readonly number[]) {
+  if (sameMidiSelection(selectedMidis.value, midis)) {
+    selectedMidis.value = []
+    return
+  }
+  selectedMidis.value = [...midis].sort((a, b) => a - b)
+}
+
+function isChordActive(midis: readonly number[]): boolean {
+  return sameMidiSelection(selectedMidis.value, midis)
 }
 </script>
 
@@ -77,6 +91,29 @@ function clearAll() {
           >
             すべてクリア
           </button>
+        </div>
+        <div class="mb-4">
+          <p class="mb-2 text-sm text-neutral-600">
+            ダイアトニック（C 長調・三和音）: タップで和音を入力、もう一度タップで解除
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="ch in DIATONIC_TRIADS_C_MAJOR"
+              :key="ch.label"
+              type="button"
+              class="min-h-[44px] rounded-md border px-3 text-sm font-medium shadow-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              :class="
+                isChordActive(ch.midis)
+                  ? 'border-amber-600 bg-amber-100 text-amber-950 ring-2 ring-amber-500 ring-offset-1'
+                  : 'border-neutral-400 bg-neutral-50 text-neutral-800 hover:bg-neutral-100'
+              "
+              :aria-pressed="isChordActive(ch.midis)"
+              :aria-label="`${ch.label}。${isChordActive(ch.midis) ? '選択中' : '未選択'}`"
+              @click="toggleDiatonicChord(ch.midis)"
+            >
+              {{ ch.label }}
+            </button>
+          </div>
         </div>
         <PianoKeyboard :selected="selectedSet" @toggle="toggleMidi" />
       </section>

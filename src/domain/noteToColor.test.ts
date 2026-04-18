@@ -7,4 +7,8 @@ describe('noteToColor', () => {
     expect(r).toBeGreaterThan(g)
     expect(r).toBeGreaterThan(b)
   })
+
+  it('オクターブ違いは同じ色相（D4 と D5 は同一 RGB）', () => {
+    expect(midiToRgb(62)).toEqual(midiToRgb(74))
+  })
 })
