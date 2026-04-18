@@ -1,6 +1,6 @@
 # アプリ構築から公開までの流れ
 
-前提: [TECH_STACK.md](./TECH_STACK.md) の **Vite + TypeScript + 任意フレームワーク**。
+前提: [TECH_STACK.md](./TECH_STACK.md) の **Vite + TypeScript + 任意フレームワーク**。パッケージマネージャは本ドキュメントでは **pnpm** を前提とする（未導入の場合は [pnpm のインストール](https://pnpm.io/installation)を参照。`corepack enable` や `npm install -g pnpm` でも可）。
 
 ## 1. ローカル開発環境
 
@@ -8,7 +8,7 @@
 2. プロジェクト作成:
 
    ```bash
-   npm create vite@latest note2color -- --template react-ts
+   pnpm create vite@latest note2color -- --template react-ts
    ```
 
    （テンプレートは React でなくてもよい。）
@@ -16,30 +16,30 @@
    **既にクローン済みのリポジトリ直下に置く場合**は、カレントディレクトリを指定する例:
 
    ```bash
-   npm create vite@latest . -- --template react-ts
+   pnpm create vite@latest . -- --template react-ts
    ```
 
-3. 依存関係インストール: `npm install`（**pnpm / yarn** を使う場合は `pnpm install` / `yarn` に読み替え）。
-4. 開発サーバ: `npm run dev` → ブラウザで `http://localhost:5173`（既定）
-5. 本番ビルドのローカル確認: `npm run build` → `npm run preview` → 既定では `http://localhost:4173`（`dist` の内容を配信）
+3. 依存関係インストール: `pnpm install`
+4. 開発サーバ: `pnpm dev`（または `pnpm run dev`）→ ブラウザで `http://localhost:5173`（既定。`base` を設定している場合は `/リポジトリ名/` 付きの URL）
+5. 本番ビルドのローカル確認: `pnpm run build` → `pnpm run preview` → 既定では `http://localhost:4173`（`dist` の内容を配信）
 
 ## 2. 実装の順序（推奨）
 
 1. **ドメイン層**: `midi` → 音クラス、`noteToColor`（HSV→RGB）、`mixing`（加法・CMY）。**Vitest で数値テスト**。
 2. **UI**: 鍵盤（選択集合）、カラーボックス、モード切替、数値表示。
 3. **レスポンシブ**: メディアクエリまたはモバイルファーストのレイアウト。
-4. **ビルド確認**: `npm run build` → `npm run preview` で本番相当の確認。
+4. **ビルド確認**: `pnpm run build` → `pnpm run preview` で本番相当の確認。
 
 ## 3. 品質・公開前チェック
 
-- `npm run build` がエラーなく通る。
-- **テスト**: Vitest を導入している場合は `npm run test`（または `npx vitest run`）が通る。
+- `pnpm run build` がエラーなく通る。
+- **テスト**: Vitest を導入している場合は `pnpm run test`（または `pnpm exec vitest run`）が通る。
 - 主要ブラウザで **鍵盤・混色・表示** を確認（実機のスマホ推奨）。
 - アクセシビリティ: コントラスト、フォーカス可能な操作（可能なら）。
 
 ## 4. 本番ビルド
 
-- `npm run build` で `dist/`（または設定した出力ディレクトリ）に静的ファイルが生成される。
+- `pnpm run build` で `dist/`（または設定した出力ディレクトリ）に静的ファイルが生成される。
 
 ## 5. デプロイ（例: GitHub Pages）
 
@@ -56,14 +56,14 @@
 
 ### 5.2 デプロイのしかた（よくあるパターン）
 
-- **GitHub Actions**: `main` へのプッシュ時に `npm ci` → `npm run build` → 生成物を **GitHub Pages** に公開（`actions/upload-pages-artifact` と `actions/deploy-pages` の組み合わせが一般的）。リポジトリの **Settings → Pages** でソースを **GitHub Actions** にする。
+- **GitHub Actions**: `main` へのプッシュ時に `pnpm install --frozen-lockfile` → `pnpm run build` → 生成物を **GitHub Pages** に公開（`actions/upload-pages-artifact` と `actions/deploy-pages` の組み合わせが一般的）。リポジトリの **Settings → Pages** でソースを **GitHub Actions** にする。
 - **別ブランチ方式**: ビルド結果だけを **`gh-pages` ブランチ** にプッシュするワークフロー（例: `peaceiris/actions-gh-pages`）もよく使われる。**Settings → Pages** で公開ブランチを `gh-pages` / `root` に指定。
 
 いずれも **ビルドはリポジトリのルートで実行**し、**公開するのは `dist/` の中身**（設定により `dist` 自体ではなくその子をルートとして載せる）である点は同じ。
 
 ### 5.3 Cloudflare Pages / Netlify
 
-- リポジトリ連携後、**ビルドコマンド** `npm run build`、**出力ディレクトリ** `dist` を指定。
+- リポジトリ連携後、**ビルドコマンド** `pnpm run build`、**出力ディレクトリ** `dist` を指定。
 - 環境変数は本プロジェクトでは原則不要（API キーなし前提）。
 - サブパスではなくルートに載せるホスティングが多いが、**カスタムドメインやサブパス**を使う場合は各サービスの「ベースパス」設定と Vite の `base` を揃える。
 
