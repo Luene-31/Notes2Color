@@ -10,7 +10,8 @@
 
 Note2Color は **Web アプリ**です。案内されたページのアドレスを **ブラウザで開き**、画面の指示に従って操作してください。別途アプリのインストールは不要で、パソコンやスマートフォンの一般的なブラウザから利用できます。
 
-## 仕様・技術ドキュメント（開発者向け）
+公開URL（GitHub Pages）: **https://luene-31.github.io/Notes2Color/**
 
-色と音の対応や混色の定義は **[doc/SPEC_MAPPING_AND_MIXING.md](./doc/SPEC_MAPPING_AND_MIXING.md)** を正とします。  
-その他の設計メモは **[doc/README.md](./doc/README.md)** の一覧から参照できます。
+## 補足
+
+本リポジトリの `doc` には、利用者向けの取り扱い説明書のみを掲載しています。
